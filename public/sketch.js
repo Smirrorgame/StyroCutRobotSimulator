@@ -1,18 +1,22 @@
+
+let myFont;
+
 let base;
 let effector;
-let montserat;
+let object;
 
 let socket;
 
 function preload() {
   base = new CoordinateSystem(1,0,0, 0,1,0, 0,0,1, 0,0,0);
-  effector = new CoordinateSystem(1,0,0, 0,0,-1 ,0,1,0, 50,50,200);
-  montserat = loadFont('assets/Montserrat.otf');
+  effector = new CoordinateSystem(1, 0, 0, 0, 0, -1, 0, 1, 0, 50, 50, 200);
+  object = new STLObject(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 100, 20);
+  myFont = loadFont('assets/Montserrat.otf');
 }
 
 function setup() {
   createCanvas(1200,600, WEBGL);
-  textFont(montserat);
+  textFont(myFont);
   textSize(32);
   textAlign(CENTER, CENTER);
 
@@ -51,6 +55,7 @@ function draw() {
     );
   base.disp(false);
   effector.disp(true);
+  object.show();
 }
 
 function showGrid(size, len){

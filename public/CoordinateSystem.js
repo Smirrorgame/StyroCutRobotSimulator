@@ -3,13 +3,16 @@ class CoordinateSystem {
     this.m = new Matrix(n1,n2,n3, o1,o2,o3, p1,p2,p3, x,y,z);
   }
 
+  turn() {
+    applyMatrix(this.m.n1, this.m.n2, this.m.n3, 0,
+      this.m.o1, this.m.o2, this.m.o3, 0,
+      this.m.p1, this.m.p2, this.m.p3, 0,
+      this.m.t1, this.m.t2, this.m.t3, 1);
+  }
 
   disp(effector) {
     push();
-    applyMatrix(this.m.n1, this.m.n2, this.m.n3, 0,
-                this.m.o1, this.m.o2, this.m.o3, 0,
-                this.m.p1, this.m.p2, this.m.p3, 0,
-                this.m.t1, this.m.t2, this.m.t3, 1);
+    this.turn();
     let c_len = 25;
     strokeWeight(3);
     stroke(255,0,0);
