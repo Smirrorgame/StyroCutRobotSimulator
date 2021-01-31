@@ -1,0 +1,16 @@
+{
+  "name": "styrocutrobot",
+  "version": "1.0.0",
+  "description": "StyroCutRobot App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Micha Halla",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.1.0"
+  }
+}
