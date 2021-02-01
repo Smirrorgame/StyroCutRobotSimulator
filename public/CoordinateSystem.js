@@ -4,10 +4,10 @@ class CoordinateSystem {
   }
 
   turn() {
-    applyMatrix(this.m.n1, this.m.n2, this.m.n3, 0,
-      this.m.o1, this.m.o2, this.m.o3, 0,
-      this.m.p1, this.m.p2, this.m.p3, 0,
-      this.m.t1, this.m.t2, this.m.t3, 1);
+    applyMatrix(this.m.matrix[0][0], this.m.matrix[0][1], this.m.matrix[0][2], 0,
+      this.m.matrix[1][0], this.m.matrix[1][1], this.m.matrix[1][2], 0,
+      this.m.matrix[2][0], this.m.matrix[2][1], this.m.matrix[2][2], 0,
+      this.m.matrix[3][0], this.m.matrix[3][1], this.m.matrix[3][2], 1);
   }
 
   disp(effector) {
