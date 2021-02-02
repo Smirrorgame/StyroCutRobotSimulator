@@ -1,29 +1,26 @@
 
 let myFont;
 
-let base;
-let effector;
+let robot;
 let object;
+let tracker;
+let w;
+let h;
 
 let socket;
-
-let transf = {
-  r_e: [],
-  e_m: [],
-  r_t: [],
-  t_m: []
-};
+const DEBUG = false;
 
 function preload() {
-  base = new CoordinateSystem(1,0,0, 0,1,0, 0,0,1, 0,0,0);
-  effector = new CoordinateSystem(1,0,0, 0,0,-1, 0,1,0, 50,50,200);
-  //object = new STLObject(-1,0,0, 0,0,-1, 0,-1,0, 0,100,100);
-  object = new STLObject(-1,0,0, 0,-1,0, 0,0,1, 50,20,100);
+  robot = new Robot(1,0,0, 0,1,0, 0,0,1, 0,0,0);
+  tracker = new Tracker(-1,0,0, 0,0,-1, 0,-1,0, 100,150,100);
+  object = new STLObject(1,0,0, 0,1,0, 0,0,1, 50,20,100);
   myFont = loadFont('assets/Montserrat.otf');
+  w = window.innerWidth-20;
+  h = window.innerHeight-20;
 }
 
 function setup() {
-  createCanvas(1200,600, WEBGL);
+  createCanvas(w,h, WEBGL);
   textFont(myFont);
   textSize(32);
   textAlign(CENTER, CENTER);
@@ -33,11 +30,11 @@ function setup() {
   socket.on("pos", gotNewPos);
   socket.on("marker", sendMarker);
   socket.on("effector", sendEffector);
-  object.update(effector.m);
+  tracker.update(robot.effector.m);
 }
 
 function sendMarker() {
-  let m = Matrix.transpose(object.marker.m.matrix).matrix;
+  let m = Matrix.transpose(tracker.marker.m.matrix).matrix;
   let s = millis() +" y ";
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
@@ -49,7 +46,7 @@ function sendMarker() {
 }
 
 function sendEffector(data) {
-  let m = Matrix.transpose(effector.m.matrix).matrix;
+  let m = Matrix.transpose(robot.effector.m.matrix).matrix;
   let s = "";
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
@@ -59,36 +56,15 @@ function sendEffector(data) {
   socket.emit("effector", s);
 }
 
-function printPoses() {
-  console.log("M");
-  console.log(effector.m.matrix);
-  console.log("X");
-  console.log(object.effectorToMarker.matrix);
-  console.log("Y");
-  console.log(object.coord.m.matrix);
-  console.log("N");
-  let y_inv = object.coord.m.invert();
-  let tmp = Matrix.mult(object.effectorToMarker.matrix, effector.m.matrix);
-  let tmp2 = Matrix.mult(tmp, y_inv);
-  console.log(tmp2);
-
-  transf.r_e = effector.m.matrix;
-  transf.e_m = object.effectorToMarker.matrix;
-  transf.r_t = object.coord.m.matrix;
-  transf.t_m = tmp2;
-
-}
-
 function newMessage(data){
   console.log(data);
 }
 
 function gotNewPos(data) {
   let pos = data.split(" ");
-  let worked = effector.m.set(pos);
-  object.update(effector.m);
-  console.log(worked);
-  socket.emit("response", worked);
+  robot.effector.m.set(pos);
+  tracker.update(robot.effector.m);
+  socket.emit("response", true);
 }
 
 function draw() {
@@ -107,10 +83,11 @@ function draw() {
       1,0,0,0,
       0,-1,0,0,
       0,0,0,1
-    );
-  base.disp(false);
-  effector.disp(true);
-  object.show();
+  );
+  robot.show();
+  tracker.show(robot);
+  //object.show();
+  
 }
 
 function showGrid(size, len){
@@ -124,3 +101,18 @@ function showGrid(size, len){
   }
 
 }
+/*
+function newTable(m) {
+  for (let r = 0; r<m.length; r++) {
+    let p = document.createElement("p");
+    let s = "";
+    for (let c = 0; c < m[0].length; c++){
+      s = s+" "+m[r][c]+" ";
+    }
+    p.innerHTML = s;
+    document.body.appendChild(p);
+  }
+  document.body.appendChild(document.createElement("br"));
+
+}
+*/

@@ -108,6 +108,7 @@ io.sockets.on('connection', function (socket) {
     );
     socket.on('marker',
       function (data) {
+        console.log("marker:");
         console.log(data);
         tracker.write(data);
       }
@@ -115,6 +116,7 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('effector',
       function (data) {
+        console.log("effector:");
         console.log(data);
         robot.write(data);
       }
