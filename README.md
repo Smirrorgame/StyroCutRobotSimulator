@@ -1,10 +1,10 @@
 # StyroCutRobotSimulator
-Dieses Programm simuliert den im Repository [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) benutzten Roboter und stellt ihn grafisch dar. Man kann sich dann mit dem Programm StyroCutRobot dort verbinden und einfache Befehle senden, die visuell in einer 3D Umgebung dargestellt werden.
-
+Dieses Programm simuliert den im Projekt [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) benutzten Roboter und stellt relevante Koordinatensysteme grafisch dar. Man kann sich dann mit dem eben genannten Programm StyroCutRobot dort verbinden und einfache Befehle senden, die visuell in einer 3D Umgebung dargestellt werden.
+Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieben und für die vereinfachte grafische Darstellung wurde die [p5.js](https://p5js.org/) Library genutzt. Dementsprechend läuft diese Anwendung im Browser.
 
 ## Features
 1. Bedienbare 3D-Umgebung im Browser
-2. TCP-Serveran Port 5005 und 5000 für das [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) Programm
+2. TCP-Server an Port 5005 und 5000 für das [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) Programm
 3. Senden von Endeffektorpositionen
 4. Abfragen von Endeffektorpositionen
 5. Abfragen von Markerposition
