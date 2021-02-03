@@ -1,6 +1,6 @@
 # StyroCutRobotSimulator
 Dieses Programm simuliert den im Projekt [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) benutzten Roboter und stellt relevante Koordinatensysteme grafisch dar. Man kann sich dann mit dem eben genannten Programm StyroCutRobot dort verbinden und einfache Befehle senden, die visuell in einer 3D Umgebung dargestellt werden.
-Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieben und für die vereinfachte grafische Darstellung wurde die [p5.js](https://p5js.org/) Library genutzt. Dementsprechend läuft diese Anwendung im Browser.
+Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieben und für die vereinfachte grafische Darstellung wurde die [p5.js](https://p5js.org/) und die [p5.EasyCam](https://freshfork.github.io/p5.EasyCam/)Library genutzt. Dementsprechend läuft diese Anwendung im Browser.
 
 ## Features
 1. Bedienbare 3D-Umgebung im Browser
