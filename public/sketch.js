@@ -12,8 +12,9 @@ const DEBUG = false;
 
 function preload() {
   robot = new Robot(1,0,0, 0,1,0, 0,0,1, 0,0,0);
-  tracker = new Tracker(-1,0,0, 0,0,-1, 0,-1,0, 100,150,100);
-  object = new STLObject(1,0,0, 0,1,0, 0,0,1, 50,20,100);
+  tracker = new Tracker(-1, 0, 0, 0, 0, -1, 0, -1, 0, 100, 150, 100);
+  let myModel = loadModel('assets/simple_pyramid_3.stl', false);
+  object = new STLObject(1,0,0, 0,1,0, 0,0,1, 50,20,100, myModel);
   myFont = loadFont('assets/Montserrat.otf');
   w = window.innerWidth-20;
   h = window.innerHeight-20;
@@ -31,6 +32,10 @@ function setup() {
   socket.on("marker", sendMarker);
   socket.on("effector", sendEffector);
   tracker.update(robot.effector.m);
+
+  createEasyCam();
+
+  document.oncontextmenu = function() { return false; }
 }
 
 function sendMarker() {
@@ -70,8 +75,7 @@ function gotNewPos(data) {
 function draw() {
   smooth();
   background(51);
-  orbitControl();
-  showGrid(50, 200);
+  showGrid(200, 200);
   fill(255, 0, 0);
   text("X", -width/8,-height/4);
   fill(0, 255, 0);
@@ -86,8 +90,9 @@ function draw() {
   );
   robot.show();
   tracker.show(robot);
-  //object.show();
+  object.show();
   
+  //orbitControl();
 }
 
 function showGrid(size, len){
