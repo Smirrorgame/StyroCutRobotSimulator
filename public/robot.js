@@ -1,5 +1,6 @@
 class Robot {
-    constructor(n1,n2,n3, o1,o2,o3, p1,p2,p3, x,y,z) {
+    constructor(n1, n2, n3, o1, o2, o3, p1, p2, p3, x, y, z, name) {
+        this.name = name;
         this.m = new Matrix(n1, n2, n3, o1, o2, o3, p1, p2, p3, x, y, z);
         this.effector = new Effector(1,0,0, 0,0,-1, 0,1,0, 50,50,200);
     }
@@ -17,7 +18,7 @@ class Robot {
         //show text
         if (DEBUG) {
             fill(127, 127, 127);
-            text("R", 0, 0);
+            text(this.name, 0, 0);
         }
         //show coordinate system
         let c_len = 25;

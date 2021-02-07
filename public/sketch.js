@@ -1,42 +1,100 @@
 
 let myFont;
 
-let robot;
+let cutter;
+let holder;
+let activeRobot;
 let object;
 let tracker;
-let w;
-let h;
+
+let checkbox;
 
 let socket;
-const DEBUG = false;
+const DEBUG = true;
+
+/* function to setup the sketch */
 
 function preload() {
-  robot = new Robot(1,0,0, 0,1,0, 0,0,1, 0,0,0);
+  cutter = new Robot(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, "C");
+  holder = new Robot(1,0,0, 0,1,0, 0,0,1, 0,200,0, "H");
   tracker = new Tracker(-1, 0, 0, 0, 0, -1, 0, -1, 0, 100, 150, 100);
   let myModel = loadModel('assets/simple_pyramid_3.stl', false);
   object = new STLObject(1,0,0, 0,1,0, 0,0,1, 50,20,100, myModel);
   myFont = loadFont('assets/Montserrat.otf');
-  w = window.innerWidth-20;
-  h = window.innerHeight-20;
+  
+  activeRobot = cutter;
 }
 
 function setup() {
-  createCanvas(w,h, WEBGL);
+  createCanvas(windowWidth-20,windowHeight-50, WEBGL);
   textFont(myFont);
   textSize(32);
-  textAlign(CENTER, CENTER);
+  textAlign(CENTER, TOP);
 
   socket = io.connect("localhost:3000");
   socket.on("message", newMessage);
-  socket.on("pos", gotNewPos);
+  socket.on("posCutter", posCutter);
+  socket.on("posHolder", posHolder);
   socket.on("marker", sendMarker);
-  socket.on("effector", sendEffector);
-  tracker.update(robot.effector.m);
+  socket.on("effCutter", effCutter);
+  socket.on("effHolder", effHolder);
+  tracker.update();
 
   createEasyCam();
-
-  document.oncontextmenu = function() { return false; }
+  document.oncontextmenu = function () { return false; }
+  checkbox = createCheckbox('Tracker on Cutter', true);
+  checkbox.changed(() => {
+    if (checkbox.checked()) {
+      activeRobot = cutter;
+      console.log("Tracker now on Cutter");
+    }
+    else {
+      activeRobot = holder;
+      console.log("Tracker now on Holder");
+    }
+    tracker.update()
+  });
 }
+
+/* function to draw stuff */
+
+function draw() {
+  smooth();
+  background(51);
+  showGrid(4, 800);
+  fill(255, 0, 0);
+  text("X", -width/4,-height/4);
+  fill(0, 255, 0);
+  text("Y", -width/4,-height/4+32)
+  fill(0, 0, 255);
+  text("Z", -width/4, -height / 4 + 64)
+  fill(255);
+  text("Remember to set\n Marker position\n with the checkbox", -width/4,-height/4+96)
+  applyMatrix(
+      0,0,1,0,
+      1,0,0,0,
+      0,-1,0,0,
+      0,0,0,1
+  );
+  cutter.show();
+  holder.show();
+  tracker.show();
+  //object.show();
+}
+
+function showGrid(ratio, len){
+  stroke(255);
+  strokeWeight(1);
+  for(let x=-len;x<=len;x+=len/ratio) {
+    for(let z=-len;z<=len;z+=len/ratio) {
+      line(-len,0,z,len,0,z);
+      line(x,0,-len,x,0,len);
+    }
+  }
+
+}
+
+/* functions to send Data back to socket connection */
 
 function sendMarker() {
   let m = Matrix.transpose(tracker.marker.m.matrix).matrix;
@@ -50,74 +108,42 @@ function sendMarker() {
   socket.emit("marker", s);
 }
 
-function sendEffector(data) {
-  let m = Matrix.transpose(robot.effector.m.matrix).matrix;
+function effCutter(data) {
+  let m = Matrix.transpose(cutter.effector.m.matrix).matrix;
   let s = "";
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
       s += m[row][col]+" ";
     }    
   }
-  socket.emit("effector", s);
+  socket.emit("effCutter", s);
+}
+
+function effHolder(data) {
+  let m = Matrix.transpose(holder.effector.m.matrix).matrix;
+  let s = "";
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col <= 3; col++) {
+      s += m[row][col]+" ";
+    }    
+  }
+  socket.emit("effCutter", s);
+}
+
+function posCutter(data) {
+  let pos = data.split(" ");
+  cutter.effector.m.set(pos);
+  tracker.update();
+  socket.emit("posCutter", true);
+}
+
+function posHolder(data) {
+  let pos = data.split(" ");
+  holder.effector.m.set(pos);
+  tracker.update();
+  socket.emit("posHolder", true);
 }
 
 function newMessage(data){
   console.log(data);
 }
-
-function gotNewPos(data) {
-  let pos = data.split(" ");
-  robot.effector.m.set(pos);
-  tracker.update(robot.effector.m);
-  socket.emit("response", true);
-}
-
-function draw() {
-  smooth();
-  background(51);
-  showGrid(200, 200);
-  fill(255, 0, 0);
-  text("X", -width/8,-height/4);
-  fill(0, 255, 0);
-  text("Y", -width/8,-height/4+32)
-  fill(0, 0, 255);
-  text("Z", -width/8,-height/4+64)
-  applyMatrix(
-      0,0,1,0,
-      1,0,0,0,
-      0,-1,0,0,
-      0,0,0,1
-  );
-  robot.show();
-  tracker.show(robot);
-  object.show();
-  
-  //orbitControl();
-}
-
-function showGrid(size, len){
-  stroke(255);
-  strokeWeight(1);
-  for(let x=-len;x<=len;x+=size) {
-    for(let z=-len;z<=len;z+=size) {
-      line(-len,0,z,len,0,z);
-      line(x,0,-len,x,0,len);
-    }
-  }
-
-}
-/*
-function newTable(m) {
-  for (let r = 0; r<m.length; r++) {
-    let p = document.createElement("p");
-    let s = "";
-    for (let c = 0; c < m[0].length; c++){
-      s = s+" "+m[r][c]+" ";
-    }
-    p.innerHTML = s;
-    document.body.appendChild(p);
-  }
-  document.body.appendChild(document.createElement("br"));
-
-}
-*/

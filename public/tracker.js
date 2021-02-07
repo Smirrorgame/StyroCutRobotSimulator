@@ -1,13 +1,16 @@
 class Tracker {
     constructor(n1,n2,n3, o1,o2,o3, p1,p2,p3, x,y,z) {
         this.m = new Matrix(n1, n2, n3, o1, o2, o3, p1, p2, p3, x, y, z);
-        this.marker = new Marker(-1,0,0, 0,1,0, 0,0,-1, -50,-100,40);
+        this.marker = new Marker(-1, 0, 0, 0, 1, 0, 0, 0, -1, -50, -100, 40);
+        this.y = new Matrix(1,0,0, 0,1,0, 0,0,1, 0,0,0);
         this.effectorToMarker = new Matrix(1,0,0, 0,1,0, 0,0,1, 0,0,10);
     }
 
-    update(m) {
+    update() {
+        let m = activeRobot.effector.m;
+        this.y.setmat(Matrix.mult(this.m.matrix, activeRobot.m.invert()));
         let x = this.effectorToMarker;
-        let y_inv = this.m.invert();
+        let y_inv = this.y.invert();
         let tmp = Matrix.mult(x.matrix, m.matrix);
         let tmp2 = Matrix.mult(tmp, y_inv);
         let n = new Matrix(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -48,10 +51,7 @@ class Tracker {
         this.m.matrix[3][0], this.m.matrix[3][1], this.m.matrix[3][2], 1);
     }
   
-    show(robot) {
-        push();
-        // translate/turn to robot
-        robot.turn();
+    show() {
         push();
 
         // show Text
@@ -71,7 +71,6 @@ class Tracker {
         stroke(0,0,255);
         line(0, 0, 0, 0, 0, c_len);
         this.marker.show();
-        pop();
         pop();
     }
 }

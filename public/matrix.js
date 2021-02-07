@@ -45,6 +45,7 @@ class Matrix {
     }
   }
 
+  /** returns a normal array */
   invert() {
     let rot_inv = this.getRotInv();
     let d = [[this.matrix[3][0]], [this.matrix[3][1]], [this.matrix[3][2]]];
@@ -60,6 +61,7 @@ class Matrix {
     return r;
   }
 
+  /** returns a normal array */
   static mult(a, b) {
     let x = [];
     for (let row = 0; row < a.length; row++) {
@@ -109,6 +111,7 @@ class Matrix {
             [n3, o3, p3]];
   }
 
+  /** returns a matrix */
   static transpose(x) {
     if (!x) x = this.matrix;
     let t = [];

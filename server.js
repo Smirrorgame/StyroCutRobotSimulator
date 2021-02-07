@@ -7,16 +7,40 @@ var net = require('net');
 let responseState = false;
 
 let browser;
-let robot;
+let robots = {
+  cutter: null,
+  holder: null,
+};
 let tracker;
 
 // Server setup for the Robot program
 net.createServer(function(client) {
-  console.log("New Robot client connected");
-  robot = client;
-  client.on('data', function(buff) {
+  if (robots.cutter) {
+    console.log("New Holder Robot connected");
+    robots.holder = client;
+  }
+  else {
+    console.log("New Cutter Robot connected");
+    robots.cutter = client;
+  }
+  client.on('data', function (buff) {
     let data = buff.toString();
-    processRobotData(data);
+    processRobotData(data, client);
+  });
+  client.on('close', () => {
+    switch (client) {
+      case robots.cutter:
+        console.log("Cutter Robot has disconnected");
+        robots.cutter = null;
+        break;
+      case robots.holder:
+        console.log("Holder Robot has disconnected");
+        robots.holder = null;
+        break;
+      default:
+        break;
+    }
+    
   });
   client.on('error', (err) => console.log(err));
 }).listen(5005, '127.0.0.1', () => console.log('Robot Server listening at port 5005'));
@@ -40,16 +64,52 @@ function listen() {
 }
 app.use(express.static('public'));
 
-function processRobotData(data) {
+function processRobotData(data, robot) {
+  if (robot == robots.cutter) processCutter(data);
+  else if (robot == robots.holder) processHolder(data);
+  else {
+    console.log("Error, no Robot match!");
+  }
+}
+
+function processCutter(data) {
+  let robot = robots.cutter;
   let dataArr = data.split(" ");
   switch (dataArr[0].toLowerCase()) {
     case "moveminchangerowwisestatus":
       console.log("Changing effectors position...");
-      browser.emit("pos", data);
+      browser.emit("posCutter", data);
       break;
     case "getpositionhomrowwise":
-      console.log("Getting effectors position...");
-      browser.emit("effector", data);
+      console.log("Getting Cutter effectors position...");
+      browser.emit("effCutter", data);
+      return;
+    case "quit":
+      console.log("Closing connection to robot program...");
+      robot.write("disconnected");
+      robot.destroy();
+      return;
+    case "hello":
+      robot.write("accepted");
+      return;
+    default:
+      console.log("Unsupported command");
+      console.log(dataArr[0]);
+  }
+  robot.write("true");
+}
+
+function processHolder(data) {
+  let robot = robots.holder;
+  let dataArr = data.split(" ");
+  switch (dataArr[0].toLowerCase()) {
+    case "moveminchangerowwisestatus":
+      console.log("Changing effectors position...");
+      browser.emit("posHolder", data);
+      break;
+    case "getpositionhomrowwise":
+      console.log("Getting Holder effectors position...");
+      browser.emit("effHolder", data);
       return;
     case "quit":
       console.log("Closing connection to robot program...");
@@ -92,16 +152,14 @@ function processTrackerData(data) {
 // This is run for each individual user that connects
 io.sockets.on('connection', function (socket) {
   console.log("A client has connected");
-    browser = socket;
-    socket.on('message',
+  browser = socket;
+  
+    socket.on('posCutter',
       function(data) {
-        // Data comes in as whatever was sent, including objects
-        console.log("Received: " + data);
-        socket.broadcast.emit("pos", data);
-        socket.emit("pos", data);
+        responseState = data;
       }
     );
-    socket.on('response',
+    socket.on('posHolder',
       function(data) {
         responseState = data;
       }
@@ -113,17 +171,24 @@ io.sockets.on('connection', function (socket) {
         tracker.write(data);
       }
     );
-    
-    socket.on('effector',
+    socket.on('effCutter',
       function (data) {
-        console.log("effector:");
+        console.log("Cutter effector:");
         console.log(data);
-        robot.write(data);
+        robots.cutter.write(data);
       }
-  );
-
-    socket.on('disconnect', function() {
-      console.log("Client has disconnected");
-    });
+    );
+    socket.on('effHolder',
+      function (data) {
+        console.log("Holder effector:");
+        console.log(data);
+        robots.holder.write(data);
+      }
+    );
+    socket.on('disconnect',
+      function () {
+        console.log("Client has disconnected");
+      }
+    );
   }
 );
