@@ -1,6 +1,6 @@
 # StyroCutRobotSimulator
 Dieses Programm simuliert den im Projekt [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) benutzten Roboter und stellt relevante Koordinatensysteme grafisch dar. Man kann sich dann mit dem eben genannten Programm StyroCutRobot dort verbinden und einfache Befehle senden, die visuell in einer 3D Umgebung dargestellt werden.
-Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieben und für die vereinfachte grafische Darstellung wurde die [p5.js](https://p5js.org/) und die [p5.EasyCam](https://freshfork.github.io/p5.EasyCam/)Library genutzt. Dementsprechend läuft diese Anwendung im Browser.
+Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieben und für die vereinfachte grafische Darstellung wurde die [p5.js](https://p5js.org/) und die [p5.EasyCam](https://freshfork.github.io/p5.EasyCam/) Library genutzt. Dementsprechend läuft diese Anwendung im Browser.
 
 ## Features
 1. Bedienbare 3D-Umgebung im Browser
@@ -15,3 +15,8 @@ Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieb
 3. Nun 'node server.js' eingeben und das Programm wird gestartet
 4. http://localhost:3000 im Browser öffnen
 5. Zusätzlich kann das [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) Programm gestartet und mit dem Server verbunden werden
+
+## StyroCutRobot
+Seit dem neuesten Update wurde der Halte-Roboter eingebaut. Nun ist es möglich in dieser WebApp die Position des Markers via Checkbox zu bestimmen (Schneide- oder Halte-Roboter), um die jeweiligen Roboter kalibrieren zu können.<br>
+Wichtig ist, dass <b>zuerst</b> mit dem Schneide-Roboter und dann mit dem Halte-Roboter verbunden wird.<br>
+Diese Reihenfolge ist fest einprogrammiert, da es nicht möglich ist zu unterscheiden, zu welchem Roboter zuerst verbunden wurde.
