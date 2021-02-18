@@ -12,9 +12,10 @@ Das Programm wurde in JavaScript mit [Node.js](https://nodejs.org/en/) geschrieb
 ## Installation
 1. Zum Ausführen wird [Node.js](https://nodejs.org/en/download/) benötigt.
 2. Zum Ausführen ein Terminal/Kommandozeile im Ordner öffnen, wo sich die server.js befindet
-3. Nun 'node server.js' eingeben und das Programm wird gestartet
-4. http://localhost:3000 im Browser öffnen
-5. Zusätzlich kann das [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) Programm gestartet und mit dem Server verbunden werden
+3. Zuerst müssen die node_modules mit 'npm install' installiert werden
+4. Nun 'node server.js' eingeben und das Programm wird gestartet
+5. http://localhost:3000 im Browser öffnen
+6. Zusätzlich kann das [StyroCutRobot](https://github.com/Smirrorgame/StyroCutRobot) Programm gestartet und mit dem Server verbunden werden
 
 ## StyroCutRobot
 Seit dem neuesten Update wurde der Halte-Roboter eingebaut. Nun ist es möglich in dieser WebApp die Position des Markers via Checkbox zu bestimmen (Schneide- oder Halte-Roboter), um die jeweiligen Roboter kalibrieren zu können.<br>
