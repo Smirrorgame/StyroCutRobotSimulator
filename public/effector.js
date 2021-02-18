@@ -3,6 +3,10 @@ class Effector {
         this.m = new Matrix(n1, n2, n3, o1, o2, o3, p1, p2, p3, x, y, z);
     }
   
+    setPos(pos) {
+        this.m.set(pos);
+    }
+
     turn() {
       applyMatrix(this.m.matrix[0][0], this.m.matrix[0][1], this.m.matrix[0][2], 0,
         this.m.matrix[1][0], this.m.matrix[1][1], this.m.matrix[1][2], 0,

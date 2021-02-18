@@ -8,9 +8,10 @@ let object;
 let tracker;
 
 let checkbox;
+let DEBUGcheckbox;
 
 let socket;
-const DEBUG = true;
+let DEBUG = false;
 
 /* function to setup the sketch */
 
@@ -26,7 +27,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth-20,windowHeight-50, WEBGL);
+  createCanvas(windowWidth-20,windowHeight-70, WEBGL);
   textFont(myFont);
   textSize(32);
   textAlign(CENTER, TOP);
@@ -53,6 +54,16 @@ function setup() {
       console.log("Tracker now on Holder");
     }
     tracker.update()
+  });
+
+  DEBUGcheckbox = createCheckbox('DEBUG', false);
+  DEBUGcheckbox.changed(() => {
+    if (DEBUGcheckbox.checked()) {
+      DEBUG = true;
+    }
+    else {
+      DEBUG = false;
+    }
   });
 }
 
@@ -109,7 +120,7 @@ function sendMarker() {
 }
 
 function effCutter(data) {
-  let m = Matrix.transpose(cutter.effector.m.matrix).matrix;
+  let m = Matrix.transpose(cutter.getEffector().m.matrix).matrix;
   let s = "";
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
@@ -120,7 +131,7 @@ function effCutter(data) {
 }
 
 function effHolder(data) {
-  let m = Matrix.transpose(holder.effector.m.matrix).matrix;
+  let m = Matrix.transpose(holder.getEffector().m.matrix).matrix;
   let s = "";
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
@@ -132,14 +143,14 @@ function effHolder(data) {
 
 function posCutter(data) {
   let pos = data.split(" ");
-  cutter.effector.m.set(pos);
+  cutter.setEffector(pos);
   tracker.update();
   socket.emit("posCutter", true);
 }
 
 function posHolder(data) {
   let pos = data.split(" ");
-  holder.effector.m.set(pos);
+  holder.setEffector(pos);
   tracker.update();
   socket.emit("posHolder", true);
 }

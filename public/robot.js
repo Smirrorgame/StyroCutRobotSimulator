@@ -11,6 +11,14 @@ class Robot {
         this.m.matrix[2][0], this.m.matrix[2][1], this.m.matrix[2][2], 0,
         this.m.matrix[3][0], this.m.matrix[3][1], this.m.matrix[3][2], 1);
     }
+
+    getEffector() {
+        return this.effector;
+    }
+
+    setEffector(pos) {
+        this.effector.setPos(pos);
+    }
   
     show() {
         push();
