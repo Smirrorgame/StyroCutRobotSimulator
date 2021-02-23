@@ -22,7 +22,7 @@ function preload() {
   let myModel = loadModel('assets/simple_pyramid_3.stl', false);
   object = new STLObject(1,0,0, 0,1,0, 0,0,1, 50,20,100, myModel);
   myFont = loadFont('assets/Montserrat.otf');
-  
+
   activeRobot = cutter;
 }
 
@@ -113,7 +113,7 @@ function sendMarker() {
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
       s += m[row][col]+" ";
-    }    
+    }
   }
   s += "1";
   socket.emit("marker", s);
@@ -125,7 +125,7 @@ function effCutter(data) {
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
       s += m[row][col]+" ";
-    }    
+    }
   }
   socket.emit("effCutter", s);
 }
@@ -136,7 +136,7 @@ function effHolder(data) {
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col <= 3; col++) {
       s += m[row][col]+" ";
-    }    
+    }
   }
   socket.emit("effCutter", s);
 }
