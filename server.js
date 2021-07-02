@@ -115,6 +115,10 @@ function processHolder(data) {
       console.log("Getting Holder effectors position...");
       browser.emit("effHolder", data);
       return;
+      case "isadept":
+        console.log("Check if Robot is Adept Robot");
+        responseState = true;
+        break;
     case "quit":
       console.log("Closing connection to robot program...");
       robot.write("disconnected");
