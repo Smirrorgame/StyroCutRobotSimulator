@@ -84,6 +84,10 @@ function processCutter(data) {
       console.log("Getting Cutter effectors position...");
       browser.emit("effCutter", data);
       return;
+    case "isadept":
+      console.log("Check if Robot is Adept Robot");
+      responseState = true;
+      break;
     case "quit":
       console.log("Closing connection to robot program...");
       robot.write("disconnected");
@@ -96,7 +100,7 @@ function processCutter(data) {
       console.log("Unsupported command");
       console.log(dataArr[0]);
   }
-  robot.write("true");
+  robot.write(""+responseState);
 }
 
 function processHolder(data) {
@@ -123,7 +127,7 @@ function processHolder(data) {
       console.log("Unsupported command");
       console.log(dataArr[0]);
   }
-  robot.write("true");
+  robot.write(""+responseState);
 }
 
 function processTrackerData(data) {
@@ -140,6 +144,18 @@ function processTrackerData(data) {
       return;
     case "hello\n":
       tracker.write("accepted");
+      return;
+    case "cm_getsystem\n":
+      tracker.write("Tracking Simulator");
+      return;
+    case "cm_gettrackers\n":
+      tracker.write("Tracker01 Tracker02");
+      return;
+    case "tracker01":
+      tracker.write("ANS_TRUE");
+      return;
+    case "format_matrixrowwise\n":
+      tracker.write("ANS_TRUE");
       return;
     default:
       console.log("Unsupported command");
